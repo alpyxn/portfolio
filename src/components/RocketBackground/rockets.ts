@@ -358,12 +358,12 @@ function createRocket(
     
     rocket.rotation = baseRotation + wobbleFactor * 0.2;
     
-    if (rocket.position.y < -100 || 
-        rocket.position.x < -100 || 
-        rocket.position.x > width + 100) {
+    if (rocket.position.y < -50 || 
+        rocket.position.x < -50 || 
+        rocket.position.x > width + 50) {
       rocket.position.set(
         Math.random() * width,
-        height + 20
+        height + 50
       );
       rocket.rotation = -Math.PI / 4 + (Math.random() * Math.PI / 2);
     }
