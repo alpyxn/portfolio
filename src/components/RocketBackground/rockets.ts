@@ -24,9 +24,8 @@ export function createRockets(app: PIXI.Application, count: number, options: Roc
   app.stage.addChild(rocketContainer);
 
   ParticleTracker.count = 0;
-  ParticleTracker.maxParticles = isLowPowerDevice ? 120 : 240;
+  ParticleTracker.maxParticles = isLowPowerDevice ? 180 : 240;
 
-  // Use the requested count without limiting
   const adjustedCount = count;
   
   for (let i = 0; i < adjustedCount; i++) {
@@ -50,7 +49,7 @@ function createRocket(
     RocketSizeSettings.desktop : 
     RocketSizeSettings.mobile;
   
-  const speed = 0.8 + Math.random() * (isLowPowerDevice ? 1.5 : 2);
+  const speed = 0.8 + Math.random() * (isLowPowerDevice ? 1.8 : 2);
   const size = sizeSettings.minSize + Math.random() * (sizeSettings.maxSize - sizeSettings.minSize);
   const rotation = -Math.PI / 4 + (Math.random() * Math.PI / 2);
   
@@ -332,7 +331,7 @@ function createRocket(
   
   rocket.position.set(
     Math.random() * width,
-    height - 100
+    height - 50 - Math.random() * 100
   );
   
   container.addChild(rocket);
@@ -359,12 +358,12 @@ function createRocket(
     
     rocket.rotation = baseRotation + wobbleFactor * 0.2;
     
-    if (rocket.position.y < -50 || 
-        rocket.position.x < -50 || 
-        rocket.position.x > width + 50) {
+    if (rocket.position.y < -100 || 
+        rocket.position.x < -100 || 
+        rocket.position.x > width + 100) {
       rocket.position.set(
         Math.random() * width,
-        height + 50
+        height + 20
       );
       rocket.rotation = -Math.PI / 4 + (Math.random() * Math.PI / 2);
     }

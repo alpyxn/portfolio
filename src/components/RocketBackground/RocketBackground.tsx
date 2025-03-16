@@ -11,6 +11,7 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const resizeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -33,18 +34,15 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
       try {
         const app = new PIXI.Application();
         
-        const width = containerRef.current?.clientWidth || window.innerWidth;
-        const height = Math.min(
-          containerRef.current?.clientHeight || window.innerHeight,
-          window.innerHeight
-        );
+        const width = window.innerWidth;
+        const height = window.innerHeight * 1.2;
         
         await app.init({
           background: 0x050A30,
           width,
           height,
-          antialias: !isMobile,
-          resolution: Math.min(isSmallDevice ? 0.75 : (isMobile ? 0.9 : 1.1), window.devicePixelRatio || 1),
+          antialias: !isSmallDevice,
+          resolution: Math.min(isSmallDevice ? 0.9 : (isMobile ? 1 : 1.1), window.devicePixelRatio || 1),
           autoDensity: true,
           powerPreference: "low-power",
         });
@@ -56,7 +54,7 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
 
         createRockets(app, determineRocketCount(), { isLowPowerDevice });
         
-        app.ticker.maxFPS = isSmallDevice ? 20 : (isMobile ? 24 : 30);
+        app.ticker.maxFPS = isSmallDevice ? 30 : (isMobile ? 30 : 30);
       } catch (error) {
         console.error("Error initializing PixiJS:", error);
       }
@@ -64,23 +62,24 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
     
     setupPixi();
 
-    let resizeTimeout: number;
     const handleResize = () => {
-      if (resizeTimeout) {
-        window.clearTimeout(resizeTimeout);
+      if (resizeTimerRef.current) {
+        window.clearTimeout(resizeTimerRef.current);
       }
       
-      resizeTimeout = window.setTimeout(() => {
+      resizeTimerRef.current = window.setTimeout(() => {
         if (!appRef.current || !containerRef.current || !isMounted) return;
         
-        const width = containerRef.current.clientWidth;
-        const height = Math.min(containerRef.current.clientHeight, window.innerHeight);
+        const width = window.innerWidth;
+        const height = window.innerHeight * 1.2;
         
         appRef.current.renderer.resize(width, height);
         
         appRef.current.stage.removeChildren();
-        createRockets(appRef.current, determineRocketCount(), { isLowPowerDevice: true });
-      }, 300);
+        createRockets(appRef.current, determineRocketCount(), { isLowPowerDevice });
+        
+        resizeTimerRef.current = null;
+      }, 500);
     };
 
     window.addEventListener('resize', handleResize);
@@ -90,8 +89,8 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleResize);
       
-      if (resizeTimeout) {
-        window.clearTimeout(resizeTimeout);
+      if (resizeTimerRef.current) {
+        window.clearTimeout(resizeTimerRef.current);
       }
       if (appRef.current) {
         appRef.current.destroy(true);
@@ -103,9 +102,9 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
   const determineRocketCount = () => {
     const width = window.innerWidth;
     
-    if (width < 480) return 4;
-    if (width < 768) return 4; 
-    if (width < 1200) return 8;
+    if (width < 480) return 6;
+    if (width < 768) return 8; 
+    if (width < 1200) return 10;
     return 15;
   };
 
@@ -115,11 +114,13 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
         ref={containerRef} 
         className={`fixed inset-0 -z-10 ${className}`}
         style={{ 
-          height: '100vh', 
+          height: '120vh', 
           width: '100vw',
-          maxHeight: '100vh', 
           overflow: 'hidden',
-          pointerEvents: 'none' 
+          pointerEvents: 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0
         }}
       />
       {children}

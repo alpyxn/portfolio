@@ -26,8 +26,8 @@ export const RocketSizeSettings = {
     maxSize: 1.3    
   },
   mobile: {
-    minSize: 0.6,   
-    maxSize: 1.0    
+    minSize: 0.8,   
+    maxSize: 1.5    
   }
 };
 
