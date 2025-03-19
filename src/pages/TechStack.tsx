@@ -110,7 +110,7 @@ function TechStack() {
   const activeCategoryData = techCategories.find(cat => cat.id === activeCategory) || techCategories[0];
 
   return (
-    <div className="min-h-screen pt-20 pb-16 px-4 flex items-center">
+    <div className="min-h-screen pt-20 pb-16 px-4 flex items-center overflow-x-hidden">
       <div className="max-w-4xl mx-auto w-full text-center">
         {/* Category tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -129,14 +129,14 @@ function TechStack() {
           ))}
         </div>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white/20 relative">
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white/20 relative overflow-hidden">
           <h2 className="text-xl md:text-2xl font-bold mb-6 inline-block">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 animate-glow">
               {activeCategoryData.name} Technologies
             </span>
           </h2>
 
-          <div className="absolute -inset-10 bg-gradient-radial from-blue-500/10 to-transparent opacity-40 blur-3xl -z-10"></div>
+          <div className="absolute inset-0 bg-gradient-radial from-blue-500/10 to-transparent opacity-40 blur-3xl -z-10"></div>
 
           <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
             {activeCategoryData.items.map((tech) => (
