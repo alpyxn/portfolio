@@ -116,7 +116,7 @@ export const ProjectCard: React.FC<ProjectProps> = ({
         onMouseLeave={() => setIsHovered(false)}
       >
         <div 
-          className={`relative h-40 min-h-[10rem] sm:h-48 md:h-56 overflow-hidden bg-gradient-to-br ${gradientColors} cursor-pointer`}
+          className={`relative h-56 min-h-[14rem] sm:h-64 md:h-72 overflow-hidden bg-gradient-to-br ${gradientColors} cursor-pointer`}
           onClick={openModal}
         >
           <div className={`absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 z-10`}></div>
