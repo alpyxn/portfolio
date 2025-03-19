@@ -28,7 +28,7 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
 
     const isMobile = window.innerWidth < 768;
     const isSmallDevice = window.innerWidth < 480;
-    const isLowPowerDevice = isMobile && navigator.hardwareConcurrency ? navigator.hardwareConcurrency <= 4 : true;
+    const isLowPowerDevice = navigator.hardwareConcurrency ? navigator.hardwareConcurrency <= 4 : true;
     
     async function setupPixi() {
       try {
@@ -52,9 +52,10 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
         containerRef.current.appendChild(app.canvas);
         appRef.current = app;
 
-        createRockets(app, determineRocketCount(), { isLowPowerDevice });
-        
-        app.ticker.maxFPS = isSmallDevice ? 30 : (isMobile ? 30 : 30);
+        if (!isMobile) {
+          createRockets(app, determineRocketCount(), { isLowPowerDevice });
+          app.ticker.maxFPS = isSmallDevice ? 30 : 30;
+        }
       } catch (error) {
         console.error("Error initializing PixiJS:", error);
       }
@@ -68,6 +69,8 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
       }
       
       resizeTimerRef.current = window.setTimeout(() => {
+        const isMobileAfterResize = window.innerWidth < 768;
+        
         if (!appRef.current || !containerRef.current || !isMounted) return;
         
         const width = window.innerWidth;
@@ -75,8 +78,12 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
         
         appRef.current.renderer.resize(width, height);
         
-        appRef.current.stage.removeChildren();
-        createRockets(appRef.current, determineRocketCount(), { isLowPowerDevice });
+        if (!isMobileAfterResize) {
+          appRef.current.stage.removeChildren();
+          createRockets(appRef.current, determineRocketCount(), { isLowPowerDevice });
+        } else {
+          appRef.current.stage.removeChildren();
+        }
         
         resizeTimerRef.current = null;
       }, 500);
@@ -120,7 +127,8 @@ export function RocketBackground({ children, className = '' }: RocketBackgroundP
           pointerEvents: 'none',
           position: 'fixed',
           top: 0,
-          left: 0
+          left: 0,
+          backgroundColor: 'rgb(5, 10, 48)'
         }}
       />
       {children}
