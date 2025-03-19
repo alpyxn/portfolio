@@ -77,6 +77,7 @@ export const Navbar = () => {
         <div className="relative flex items-center space-x-1 sm:space-x-2 px-1 sm:px-3 py-0.5 rounded-full navbar-gradient overflow-x-auto hide-scrollbar">
           <NavItem to="/" label="Home" active={location.pathname === '/'} />
           <NavItem to="/techstack" label="Tech Stack" active={location.pathname === '/techstack'} /> 
+          <NavItem to="/work" label="Projects" active={location.pathname === '/work'} /> 
           
           {isVisible && (
             <div className="absolute inset-0 -z-10 overflow-hidden rounded-full opacity-30">

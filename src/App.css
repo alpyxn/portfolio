@@ -260,3 +260,35 @@
   backface-visibility: hidden;
   perspective: 1000px;
 }
+
+/* Performance optimization classes */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 200px;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-layout {
+  contain: layout;
+}
+
+.hw-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+@media (max-width: 768px) {
+  /* Specific mobile optimizations */
+  .tech-card {
+    contain: layout style paint;
+    will-change: transform;
+  }
+  
+  .tech-svg {
+    transform: translateZ(0);
+  }
+}

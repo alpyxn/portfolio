@@ -1,5 +1,5 @@
 import '../App.css';
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import reactLogo from "../assets/react.svg";
 import typeScriptLogo from "../assets/typescript.png";
 import springBootLogo from "../assets/springboot.png";
@@ -22,6 +22,34 @@ interface TechCategory {
   name: string;
   items: TechItem[];
 }
+
+// Memoized tech item component to prevent unnecessary re-renders
+const TechItemComponent = memo(({ tech }: { tech: TechItem }) => (
+  <div 
+    className="tech-card w-full max-w-[200px] name-container content-visibility-auto"
+  >
+    <div className="flex flex-col items-center text-center">
+      <div className="tech-icon-container bg-gradient-to-br from-black/40 to-black/60 p-2 rounded-lg flex-shrink-0 mb-3 hw-accelerate">
+        <img 
+          src={tech.logo} 
+          alt={tech.alt} 
+          className="tech-svg w-10 h-10 md:w-12 md:h-12 object-contain"
+          loading="lazy"
+          width={48}
+          height={48}
+          decoding="async"
+        />
+      </div>
+      <div>
+        <h3 className="text-gradient-blue-purple text-lg md:text-xl font-medium">{tech.name}</h3>
+        <p className="text-blue-200/80 text-xs md:text-sm mt-1">{tech.description}</p>
+      </div>
+    </div>
+  </div>
+));
+
+// For React DevTools display name
+TechItemComponent.displayName = 'TechItem';
 
 function TechStack() {
   const [activeCategory, setActiveCategory] = useState("frontend");
@@ -107,18 +135,22 @@ function TechStack() {
     }
   ];
 
+  const handleCategoryChange = useCallback((categoryId: string) => {
+    setActiveCategory(categoryId);
+  }, []);
+
   const activeCategoryData = techCategories.find(cat => cat.id === activeCategory) || techCategories[0];
 
   return (
     <div className="min-h-screen pt-20 pb-16 px-4 flex items-center overflow-x-hidden">
       <div className="max-w-4xl mx-auto w-full text-center">
         {/* Category tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <div className="flex flex-wrap justify-center gap-2 mb-8 content-visibility-auto">
           {techCategories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`px-3 py-1.5 rounded-full text-xs md:text-sm transition-all duration-300
+              onClick={() => handleCategoryChange(category.id)}
+              className={`px-3 py-1.5 rounded-full text-xs md:text-sm transition-all duration-300 hw-accelerate
                 ${activeCategory === category.id
                   ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-purple-900/20"
                   : "bg-white/10 text-blue-200 hover:bg-white/20 hover:text-white"
@@ -129,7 +161,7 @@ function TechStack() {
           ))}
         </div>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white/20 relative overflow-hidden">
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white/20 relative overflow-hidden contain-paint">
           <h2 className="text-xl md:text-2xl font-bold mb-6 inline-block">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 animate-glow">
               {activeCategoryData.name} Technologies
@@ -138,27 +170,9 @@ function TechStack() {
 
           <div className="absolute inset-0 bg-gradient-radial from-blue-500/10 to-transparent opacity-40 blur-3xl -z-10"></div>
 
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-8 contain-layout">
             {activeCategoryData.items.map((tech) => (
-              <div 
-                key={tech.name}
-                className="tech-card w-full max-w-[200px] name-container"
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="tech-icon-container bg-gradient-to-br from-black/40 to-black/60 p-2 rounded-lg flex-shrink-0 mb-3">
-                    <img 
-                      src={tech.logo} 
-                      alt={tech.alt} 
-                      className="tech-svg w-10 h-10 md:w-12 md:h-12 object-contain"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-gradient-blue-purple text-lg md:text-xl font-medium">{tech.name}</h3>
-                    <p className="text-blue-200/80 text-xs md:text-sm mt-1">{tech.description}</p>
-                  </div>
-                </div>
-              </div>
+              <TechItemComponent key={tech.name} tech={tech} />
             ))}
           </div>
         </div>
