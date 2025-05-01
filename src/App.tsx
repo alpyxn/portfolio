@@ -5,20 +5,26 @@ import { Navbar } from "./components/navbar";
 import Projects from "./pages/Projects";
 import TechStack from "./pages/TechStack";
 import Home from "./pages/Home";
+import FlowerBlossom from "./pages/FlowerBlossom";
 
 
 
 function App() {
   return (
     <Router>
-      <RocketBackground>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/techstack" element={<TechStack />} />
-          <Route path="/work" element={<Projects />} />
-        </Routes>
-      </RocketBackground>
+      <Routes>
+        <Route path="/love" element={<FlowerBlossom />} />
+        <Route path="*" element={
+          <RocketBackground>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/techstack" element={<TechStack />} />
+              <Route path="/work" element={<Projects />} />
+            </Routes>
+          </RocketBackground>
+        } />
+      </Routes>
     </Router>
   );
 }

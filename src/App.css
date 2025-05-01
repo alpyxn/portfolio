@@ -220,6 +220,64 @@
   }
 }
 
+/* Flower shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(20deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(20deg);
+  }
+}
+
+.shimmer {
+  animation: shimmer 6s infinite ease-in-out;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Floating animation for flowers */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(3px) rotate(-1deg);
+  }
+}
+
+.float-animation {
+  animation: float-gentle 8s infinite ease-in-out;
+}
+
+.float-animation-delayed {
+  animation: float-gentle 8s infinite ease-in-out 2s;
+}
+
+/* Petal fall effect */
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+.petal-fall {
+  animation: petal-fall var(--fall-duration, 10s) linear forwards;
+  position: absolute;
+  pointer-events: none;
+}
+
 @media (max-width: 360px) {
   .navbar-gradient {
     padding-left: 0.25rem;

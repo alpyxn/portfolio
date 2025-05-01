@@ -10,10 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
+    "framer-motion": "^12.9.3",
+    "lottie-react": "^2.4.1",
     "pixi.js": "^8.8.1",
     "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
+    "react-use": "^17.6.0",
     "terser": "^5.39.0"
   },
   "devDependencies": {
