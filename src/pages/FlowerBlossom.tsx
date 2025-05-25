@@ -1,22 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
 import { FlowerParticles, FallingPetals } from '../components/FlowerEffects';
-
-interface EnhancedFlowerProps {
-  isDayMode: boolean;
-}
 
 const ShimmerEffect = () => (
   <div className="absolute inset-0 z-[-1] overflow-hidden">
-    <div className="shimmer w-[200%] h-[200%] absolute top-[-50%] left-[-50%] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+    <div className="shimmer w-[200%] h-[200%] absolute top-[-50%] left-[-50%] bg-gradient-to-r from-transparent via-pink-400/40 to-transparent"></div>
   </div>
 );
 
-const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
+const EnhancedFlower = () => {
   const controls = useAnimation();
-  const flowerColor = isDayMode ? 
-    ["text-pink-600", "text-pink-500", "text-pink-400"] : 
-    ["text-purple-500", "text-purple-400", "text-purple-300"];
+  const flowerColor = ["text-pink-300", "text-pink-200", "text-pink-100"];
   
   const flowerRef = useRef<HTMLDivElement>(null);
   
@@ -29,17 +23,15 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
       
       if (flowerRef.current) {
         const glowEffect = document.createElement('div');
-        glowEffect.className = isDayMode 
-          ? 'absolute inset-0 rounded-full bg-pink-300 opacity-0 blur-xl z-[-1]' 
-          : 'absolute inset-0 rounded-full bg-purple-400 opacity-0 blur-xl z-[-1]';
+        glowEffect.className = 'absolute inset-0 rounded-full bg-pink-200 opacity-0 blur-xl z-[-1]';
         flowerRef.current.appendChild(glowEffect);
         
         setTimeout(() => {
           glowEffect.style.transition = 'opacity 2s ease-in-out, transform 2s ease-in-out';
-          glowEffect.style.opacity = '0.3';
+          glowEffect.style.opacity = '0.5';
           
           setInterval(() => {
-            glowEffect.style.transform = 'scale(1.1)';
+            glowEffect.style.transform = 'scale(1.3)';
             setTimeout(() => {
               glowEffect.style.transform = 'scale(1)';
             }, 1500);
@@ -56,7 +48,7 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
         clearInterval(i);
       }
     };
-  }, [controls, isDayMode]);
+  }, [controls]);
 
   return (
     <div ref={flowerRef} className="flex flex-col items-center justify-center h-full relative">
@@ -68,14 +60,14 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
           hidden: { opacity: 0 },
           bloom: { 
             opacity: 1, 
-            scale: [0.8, 1.1, 1], 
+            scale: [0.8, 1.4, 1], 
             transition: { 
-              duration: 1.5,
+              duration: 3,
               ease: [0.34, 1.56, 0.64, 1] 
             } 
           },
           sway: {
-            rotate: [0, 2, 0, -2, 0],
+            rotate: [0, 5, 0, -5, 0],
             transition: { 
               repeat: Infinity, 
               duration: 4, 
@@ -86,7 +78,23 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
       >
         <motion.div 
           className={`${flowerColor[0]} text-8xl mb-2 transform origin-bottom filter drop-shadow-lg`}
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.2, rotate: 10 }}
+          animate={{
+            y: [0, -8, 0],
+            rotate: [0, 2, 0, -2, 0],
+            transition: {
+              y: {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              },
+              rotate: {
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }
+          }}
         >
           ❀
         </motion.div>
@@ -103,12 +111,12 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
             scale: 1,
             transition: { 
               delay: 0.3, 
-              duration: 1,
+              duration: 2,
               ease: "backOut"
             }
           },
           sway: {
-            rotate: [0, 3, 0, -3, 0],
+            rotate: [0, 6, 0, -6, 0],
             transition: { 
               repeat: Infinity, 
               duration: 3.5, 
@@ -131,12 +139,12 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
             scale: 1,
             transition: { 
               delay: 0.5, 
-              duration: 1,
+              duration: 2,
               ease: "backOut"
             }
           },
           sway: {
-            rotate: [0, -2, 0, 2, 0],
+            rotate: [0, -5, 0, 5, 0],
             transition: { 
               repeat: Infinity, 
               duration: 3, 
@@ -159,12 +167,12 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
           stemGrow: { 
             scaleY: 1, 
             transition: { 
-              duration: 1.5, 
+              duration: 3, 
               ease: "easeOut" 
             }
           },
           sway: {
-            rotate: [0, 1, 0, -1, 0],
+            rotate: [0, 4, 0, -4, 0],
             transition: { 
               repeat: Infinity, 
               duration: 4, 
@@ -173,7 +181,7 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
           }
         }}
       >
-        <div className="h-24 w-2 bg-gradient-to-b from-green-400 to-green-600 rounded-full shadow-sm" />
+        <div className="h-24 w-2 bg-gradient-to-b from-pink-200 to-pink-400 rounded-full shadow-lg" />
       </motion.div>
       
       <motion.div
@@ -186,12 +194,12 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
             opacity: 1,
             scale: 1, 
             transition: { 
-              duration: 0.8,
+              duration: 1.5,
               ease: "backOut"
             }
           },
           sway: {
-            rotate: [0, 3, 0, -3, 0],
+            rotate: [0, 6, 0, -6, 0],
             transition: { 
               repeat: Infinity, 
               duration: 4, 
@@ -203,27 +211,45 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
       >
         <div className="relative w-40 h-10">
           <motion.div 
-            className="absolute left-5 text-green-600 text-3xl transform -rotate-45 filter drop-shadow-md"
-            whileHover={{ scale: 1.1, rotate: -50 }}
+            className="absolute left-5 text-pink-200 text-3xl transform -rotate-45 filter drop-shadow-md"
+            whileHover={{ scale: 1.4, rotate: -60 }}
+            animate={{
+              rotate: [-45, -55, -45],
+              scale: [1, 1.1, 1],
+              transition: {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
           >
             🍃
           </motion.div>
           <motion.div 
-            className="absolute right-5 text-green-600 text-3xl transform rotate-45 filter drop-shadow-md"
-            whileHover={{ scale: 1.1, rotate: 50 }}
+            className="absolute right-5 text-pink-200 text-3xl transform rotate-45 filter drop-shadow-md"
+            whileHover={{ scale: 1.4, rotate: 60 }}
+            animate={{
+              rotate: [45, 55, 45],
+              scale: [1, 1.1, 1],
+              transition: {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
           >
             🍃
           </motion.div>
         </div>
       </motion.div>
       
-      {/* Dew drops on leaves */}
+      {/* Enhanced dew drops on leaves */}
       <motion.div
         className="absolute mt-10 ml-16"
         initial={{ opacity: 0 }}
         animate={{ 
-          opacity: [0, 0.7, 0.5, 0.7],
-          scale: [0, 1, 0.9, 1]
+          opacity: [0, 1, 0.8, 1],
+          scale: [0, 1.3, 1, 1.3]
         }}
         transition={{ 
           delay: 2.5, 
@@ -232,15 +258,15 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
           repeatDelay: 5
         }}
       >
-        <div className="w-2 h-2 bg-blue-200 rounded-full shadow-sm opacity-80 backdrop-blur-sm" />
+        <div className="w-2 h-2 bg-pink-100 rounded-full shadow-lg opacity-95 backdrop-blur-sm" />
       </motion.div>
       
       <motion.div
         className="absolute mt-10 mr-16"
         initial={{ opacity: 0 }}
         animate={{ 
-          opacity: [0, 0.7, 0.5, 0.7],
-          scale: [0, 1, 0.9, 1]
+          opacity: [0, 1, 0.8, 1],
+          scale: [0, 1.3, 1, 1.3]
         }}
         transition={{ 
           delay: 3.2, 
@@ -249,21 +275,19 @@ const EnhancedFlower: React.FC<EnhancedFlowerProps> = ({ isDayMode }) => {
           repeatDelay: 6
         }}
       >
-        <div className="w-2 h-2 bg-blue-200 rounded-full shadow-sm opacity-80 backdrop-blur-sm" />
+        <div className="w-2 h-2 bg-pink-100 rounded-full shadow-lg opacity-95 backdrop-blur-sm" />
       </motion.div>
     </div>
   );
 };
 
 const FlowerBlossom: React.FC = () => {
-  const [isDayMode, setIsDayMode] = useState(true);
   const flowerRef = useRef<HTMLDivElement>(null);
+  const isDayMode = false; // Always dark mode
 
   const colorScheme = {
-    background: isDayMode 
-      ? 'from-blue-200 via-pink-50 to-pink-100' 
-      : 'from-indigo-900 via-purple-800 to-purple-900',
-    text: isDayMode ? 'text-pink-800' : 'text-pink-200',
+    background: 'from-indigo-900 via-purple-800 to-purple-900',
+    text: 'text-pink-200',
   };
   
   return (
@@ -276,42 +300,6 @@ const FlowerBlossom: React.FC = () => {
       {/* Falling petals effect */}
       <FallingPetals isDayMode={isDayMode} />
       
-
-      <motion.div 
-        className="fixed top-6 right-6 z-20 cursor-pointer"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsDayMode(!isDayMode)}
-      >
-        <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full p-2 shadow-lg flex items-center justify-center transition-all hover:bg-white/30">
-          <AnimatePresence mode="wait">
-            {isDayMode ? (
-              <motion.span 
-                key="sun"
-                className="text-3xl" 
-                initial={{ rotate: -30, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 30, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                ☀️
-              </motion.span>
-            ) : (
-              <motion.span 
-                key="moon"
-                className="text-3xl"
-                initial={{ rotate: 30, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -30, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                🌙
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-      
       {/* Main Content */}
       <motion.div
         ref={flowerRef}
@@ -323,33 +311,8 @@ const FlowerBlossom: React.FC = () => {
           ease: [0.22, 1, 0.36, 1], 
         }}
       >
-        <EnhancedFlower isDayMode={isDayMode} />
+        <EnhancedFlower />
         <ShimmerEffect />
-      </motion.div>
-
-      {/* Message Text */}
-      <motion.div
-        className={`mt-8 text-center ${colorScheme.text} z-10 backdrop-blur-sm bg-white/5 p-6 rounded-2xl shadow-lg`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 1 }}
-      >
-        <motion.h2 
-          className="text-2xl md:text-3xl font-bold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-        >
-            Bu sayfa JavaScript’siz çalışmaz
-        </motion.h2>
-        <motion.p 
-          className="mt-2 text-lg"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-        >
-        tıpkı kalbimin sensiz çalışmadığı gibi
-        </motion.p>
       </motion.div>
     </div>
   );

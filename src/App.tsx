@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/love" element={<FlowerBlossom />} />
+        <Route path="/dilek" element={<FlowerBlossom />} />
         <Route path="*" element={
           <RocketBackground>
             <Navbar />
