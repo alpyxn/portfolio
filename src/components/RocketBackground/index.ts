@@ -1,1 +1,0 @@
-export { RocketBackground } from './RocketBackground';

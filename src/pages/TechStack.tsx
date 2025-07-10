@@ -1,5 +1,5 @@
 import '../App.css';
-import { useState, useCallback, memo } from 'react';
+import { useState, memo } from 'react';
 import reactLogo from "../assets/react.svg";
 import typeScriptLogo from "../assets/typescript.png";
 import springBootLogo from "../assets/springboot.png";
@@ -23,33 +23,85 @@ interface TechCategory {
   items: TechItem[];
 }
 
-// Memoized tech item component to prevent unnecessary re-renders
-const TechItemComponent = memo(({ tech }: { tech: TechItem }) => (
+// Animated grid background
+const AnimatedGrid = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden opacity-10">
+      <div className="absolute inset-0" style={{
+        backgroundImage: `
+          linear-gradient(to right, #3b82f6 1px, transparent 1px),
+          linear-gradient(to bottom, #3b82f6 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px',
+        animation: 'grid-move 20s linear infinite'
+      }}></div>
+    </div>
+  );
+};
+
+// Enhanced tech item component with Magic UI effects
+const TechItemComponent = memo(({ tech, index }: { tech: TechItem; index: number }) => (
   <div 
-    className="tech-card w-full max-w-[200px] name-container content-visibility-auto"
+    className="group tech-item relative overflow-hidden"
+    style={{ animationDelay: `${index * 0.1}s` }}
   >
-    <div className="flex flex-col items-center text-center">
-      <div className="tech-icon-container bg-gradient-to-br from-black/40 to-black/60 p-2 rounded-lg flex-shrink-0 mb-3 hw-accelerate">
+    {/* Shimmer effect on hover */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+    
+    {/* Glow effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    
+    <div className="relative z-10">
+      <div className="relative mb-4">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-150"></div>
         <img 
           src={tech.logo} 
           alt={tech.alt} 
-          className="tech-svg w-10 h-10 md:w-12 md:h-12 object-contain"
+          className="tech-icon relative z-10"
           loading="lazy"
           width={48}
           height={48}
-          decoding="async"
         />
       </div>
-      <div>
-        <h3 className="text-gradient-blue-purple text-lg md:text-xl font-medium">{tech.name}</h3>
-        <p className="text-blue-200/80 text-xs md:text-sm mt-1">{tech.description}</p>
-      </div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-gray-800 transition-colors duration-300">
+        {tech.name}
+      </h3>
+      <p className="text-gray-600 text-sm text-center group-hover:text-gray-700 transition-colors duration-300">
+        {tech.description}
+      </p>
     </div>
   </div>
 ));
 
-// For React DevTools display name
 TechItemComponent.displayName = 'TechItem';
+
+// Enhanced category tab component
+const CategoryTab = ({ category, isActive, onClick }: { 
+  category: TechCategory; 
+  isActive: boolean; 
+  onClick: () => void; 
+}) => (
+  <button
+    onClick={onClick}
+    className={`group relative px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden
+      ${isActive
+        ? "bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg shadow-gray-500/25"
+        : "bg-white text-gray-700 hover:text-gray-800 border border-gray-200 hover:border-gray-300 hover:shadow-md"
+      }`}
+  >
+    {/* Shimmer effect for inactive tabs */}
+    {!isActive && (
+      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-100 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+    )}
+    
+    {/* Active tab gradient animation */}
+    {isActive && (
+      <span className="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-size-200 bg-pos-0 group-hover:bg-pos-100 transition-all duration-500"></span>
+    )}
+    
+    <span className="relative z-10">{category.name}</span>
+  </button>
+);
 
 function TechStack() {
   const [activeCategory, setActiveCategory] = useState("frontend");
@@ -135,48 +187,68 @@ function TechStack() {
     }
   ];
 
-  const handleCategoryChange = useCallback((categoryId: string) => {
-    setActiveCategory(categoryId);
-  }, []);
-
   const activeCategoryData = techCategories.find(cat => cat.id === activeCategory) || techCategories[0];
 
   return (
-    <div className="min-h-screen pt-20 pb-16 px-4 flex items-center overflow-x-hidden">
-      <div className="max-w-4xl mx-auto w-full text-center">
-        {/* Category tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8 content-visibility-auto">
-          {techCategories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryChange(category.id)}
-              className={`px-3 py-1.5 rounded-full text-xs md:text-sm transition-all duration-300 hw-accelerate
-                ${activeCategory === category.id
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-purple-900/20"
-                  : "bg-white/10 text-blue-200 hover:bg-white/20 hover:text-white"
-                }`}
-            >
-              {category.name}
-            </button>
-          ))}
-        </div>
+    <div className="bg-gradient-to-br from-gray-50 via-white to-blue-50 min-h-screen relative overflow-hidden">
+      <AnimatedGrid />
+      
+      <div className="section-padding pt-16 relative z-10">
+        <div className="container-max-width">
+          {/* Enhanced header section */}
+          <div className="text-center mb-12 relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/30 to-transparent rounded-3xl blur-3xl"></div>
+            <div className="relative z-10">
+              <h1 className="heading-secondary mb-4 text-gray-900 animate-fade-in">
+                <span className="bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500">
+                  Technology Stack
+                </span>
+              </h1>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white/20 relative overflow-hidden contain-paint">
-          <h2 className="text-xl md:text-2xl font-bold mb-6 inline-block">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 animate-glow">
-              {activeCategoryData.name} Technologies
-            </span>
-          </h2>
+              {/* Enhanced category tabs */}
+              <div className="flex flex-wrap justify-center gap-3 mb-8 animate-slide-up-delay">
+                {techCategories.map((category) => (
+                  <CategoryTab
+                    key={category.id}
+                    category={category}
+                    isActive={activeCategory === category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
 
-          <div className="absolute inset-0 bg-gradient-radial from-blue-500/10 to-transparent opacity-40 blur-3xl -z-10"></div>
+          {/* Enhanced content card */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-white to-purple-50/50 rounded-2xl"></div>
+            <div className="card-professional rounded-2xl p-8 relative border-2 border-blue-100/50 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 via-transparent to-purple-400/5 rounded-2xl"></div>
+              
+              <div className="relative z-10">
+                <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+                  <span className="bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent">
+                    {activeCategoryData.name} Technologies
+                  </span>
+                </h2>
 
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-8 contain-layout">
-            {activeCategoryData.items.map((tech) => (
-              <TechItemComponent key={tech.name} tech={tech} />
-            ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {activeCategoryData.items.map((tech, index) => (
+                    <div
+                      key={tech.name}
+                      className="animate-slide-up"
+                      style={{ animationDelay: `${0.1 + index * 0.1}s` }}
+                    >
+                      <TechItemComponent tech={tech} index={index} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      
     </div>
   );
 }
